@@ -2,7 +2,6 @@ version: '2'
 services:
 
 #==== INSTANCE MARIADB SPECIFIQUE A RANCHER-SERVER ====
-#==== Persistance de la base de données dans un volume ===
   rancher-mariadb:
     image: 'mariadb'
     restart: always
@@ -14,6 +13,7 @@ services:
       - 'rancher-mariadb:/var/lib/mysql'
     environment:
       - MYSQL_ROOT_PASSWORD = 'iop'
+      - MYSQL_DATABASE = 'ranche_db'
 
 #==== INTERFACE GRAPHIQUE POUR MARIADB ====
   rancher-phpmyadmin:
@@ -38,7 +38,7 @@ services:
     restart: always
     container_name: 'rancher-server'
     hostname: 'rancher-server'
-    expose:
+    ports:
       - '8080:8080'
     volumes:
       - 'rancher-cattle:/var/lib/cattle'
