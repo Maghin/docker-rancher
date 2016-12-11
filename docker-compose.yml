@@ -12,6 +12,8 @@ services:
       - '3306'
     volumes:
       - 'rancher-mariadb:/var/lib/mysql'
+    environment:
+      - MYSQL_ROOT_PASSWORD = 'iop'
 
 #==== INTERFACE GRAPHIQUE POUR MARIADB ====
   rancher-phpmyadmin:
