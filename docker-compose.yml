@@ -1,0 +1,63 @@
+version: '2'
+services:
+
+#==== INSTANCE MARIADB SPECIFIQUE A RANCHER-SERVER ====
+#==== Persistance de la base de données dans un volume ===
+  rancher-mariadb:
+    image: 'mariadb'
+    restart: always
+    container_name: 'rancher-mariadb'
+    hostname: 'rancher-mariadb'
+    expose:
+      - '3306'
+    volumes:
+      - 'rancher-mariadb:/var/lib/mysql'
+
+#==== INTERFACE GRAPHIQUE POUR MARIADB ====
+  rancher-phpmyadmin:
+    image: 'phpmyadmin/phpmyadmin'
+    restart: always
+    container_name: 'rancher-phpmyadmin'
+    hostname: 'rancher-phpmyadmin'
+    ports:
+      - '8000:80'
+    volumes:
+      - 'rancher-phpmyadmin:/sessions'
+    depends_on:
+      - 'rancher-mariadb'
+    links:
+      - 'rancher-mariadb:db'
+
+#==== RANCHER SERVER EN VERSION ENTREPRISE - UTILISE LA BASE RANCHER-MARIADB ===
+#==== Volumes MYSQL uniquement pour éviter la création de volumes par docker car BDD externalisée ===
+#==== Volumes cattle pour les données specifiques à rancher ≡
+  rancher-server:
+    image: 'rancher/server'
+    restart: always
+    container_name: 'rancher-server'
+    hostname: 'rancher-server'
+    expose:
+      - '8080:8080'
+    volumes:
+      - 'rancher-cattle:/var/lib/cattle'
+      - 'rancher-mysql:/var/lib/mysql'
+      - 'rancher-mysql-log:/var/log/mysql'
+#      - './ca.crt:/ca.crt'
+    depends_on:
+      - 'rancher-mariadb'
+    links:
+      - 'rancher-mariadb'
+    environment:
+      - CATTLE_DB_CATTLE_MYSQL_HOST = 'rancher-mariadb'
+      - CATTLE_DB_CATTLE_MYSQL_PORT = '3306'
+      - CATTLE_DB_CATTLE_MYSQL_NAME = 'rancher_db'
+      - CATTLE_DB_CATTLE_USERNAME   = 'root'
+      - CATTLE_DB_CATTLE_PASSWORD   = 'iop'
+
+#=== DETAIL DES VOLUMES ===
+volumes:
+  rancher-mariadb:
+  rancher-phpmyadmin:
+  rancher-cattle:
+  rancher-mysql:
+  rancher-mysql-log:
