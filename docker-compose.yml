@@ -12,8 +12,8 @@ services:
     volumes:
       - rancher-mariadb:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD = iop
-      - MYSQL_DATABASE = ranche_db
+      - MYSQL_ROOT_PASSWORD=iop
+      - MYSQL_DATABASE=rancher_db
 
 #==== INTERFACE GRAPHIQUE POUR MARIADB ====
   rancher-phpmyadmin:
@@ -50,11 +50,11 @@ services:
     links:
       - rancher-mariadb
     environment:
-      - CATTLE_DB_CATTLE_MYSQL_HOST = rancher-mariadb
-      - CATTLE_DB_CATTLE_MYSQL_PORT = '3306'
-      - CATTLE_DB_CATTLE_MYSQL_NAME = rancher_db
-      - CATTLE_DB_CATTLE_USERNAME   = root
-      - CATTLE_DB_CATTLE_PASSWORD   = iop
+      - CATTLE_DB_CATTLE_MYSQL_HOST=rancher-mariadb
+      - CATTLE_DB_CATTLE_MYSQL_PORT='3306'
+      - CATTLE_DB_CATTLE_MYSQL_NAME=rancher_db
+      - CATTLE_DB_CATTLE_USERNAME=root
+      - CATTLE_DB_CATTLE_PASSWORD=iop
 
 #=== DETAIL DES VOLUMES ===
 volumes:
