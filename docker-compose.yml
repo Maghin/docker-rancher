@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
 
 #==== INSTANCE MARIADB SPECIFIQUE A RANCHER-SERVER ====
@@ -8,12 +8,14 @@ services:
     container_name: rancher-mariadb
     hostname: rancher-mariadb
     expose:
-      - '3306'
+      - "3306"
     volumes:
       - rancher-mariadb:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=iop
-      - MYSQL_DATABASE=rancher_db
+      - MYSQL_USER=cattle
+      - MYSQL_PASSWORD=cattle
+      - MYSQL_DATABASE=rancherdb
 
 #==== INTERFACE GRAPHIQUE POUR MARIADB ====
   rancher-phpmyadmin:
@@ -22,7 +24,7 @@ services:
     container_name: rancher-phpmyadmin
     hostname: rancher-phpmyadmin
     ports:
-      - '8000:80'
+      - "8000:80"
     volumes:
       - rancher-phpmyadmin:/sessions
     depends_on:
@@ -39,7 +41,7 @@ services:
     container_name: rancher-server
     hostname: rancher-server
     ports:
-      - '8080:8080'
+      - "8080:8080"
     volumes:
       - rancher-cattle:/var/lib/cattle
       - rancher-mysql:/var/lib/mysql
@@ -51,10 +53,10 @@ services:
       - rancher-mariadb
     environment:
       - CATTLE_DB_CATTLE_MYSQL_HOST=rancher-mariadb
-      - CATTLE_DB_CATTLE_MYSQL_PORT='3306'
-      - CATTLE_DB_CATTLE_MYSQL_NAME=rancher_db
-      - CATTLE_DB_CATTLE_USERNAME=root
-      - CATTLE_DB_CATTLE_PASSWORD=iop
+      - CATTLE_DB_CATTLE_MYSQL_PORT=3306
+      - CATTLE_DB_CATTLE_MYSQL_NAME=rancherdb
+      - CATTLE_DB_CATTLE_USERNAME=cattle
+      - CATTLE_DB_CATTLE_PASSWORD=cattle
 
 #=== DETAIL DES VOLUMES ===
 volumes:
