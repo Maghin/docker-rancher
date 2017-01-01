@@ -11,5 +11,5 @@ MAINTAINER "Adrien Estanove" <maghin@merhylstudio.org>
 COPY ./conf "$HTTPD_PREFIX/conf"
 
 # Expose httpd port with ssl support
-EXPOSE "4343"
+EXPOSE "80" "443"
 
